@@ -58,7 +58,7 @@ class PreviewGenerator:
                 x = x + img.width + self.X_MARGIN
 
             preview.save(os.path.join(folder_path, "preview.png"))
-            gen.clear_all()
+            self.clear_all()
         print("DONE")
 
 
