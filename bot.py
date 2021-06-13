@@ -60,18 +60,17 @@ def generate_command(message):
     gen = preview_gen.PreviewGenerator()
     gen.run(f"{message.chat.id}")
     bot.send_chat_action(message.chat.id, 'typing')
-    try:
-        bot.send_photo(message.chat.id, open(os.path.join(f"{message.chat.id}", "preview.png"), 'rb'))
+    try:    
         bot.send_document(message.chat.id, open(os.path.join(f"{message.chat.id}", "preview.png"), 'rb'))
         clear_all(f"{message.chat.id}")
     except Exception as e:
         print(e.args)
         bot.send_message(message.chat.id, "Failed to generate preview...")
-            
+
 
 @bot.message_handler(commands=["reset"])
 def reset(message):
-    clear_all(message.chat.id)
+    clear_all(f"{message.chat.id}")
 
 
 if __name__ == "__main__":
