@@ -67,6 +67,11 @@ def generate_command(message):
     except Exception as e:
         print(e.args)
         bot.send_message(message.chat.id, "Failed to generate preview...")
+            
+
+@bot.message_handler(commands=["reset"])
+def reset(message):
+    clear_all(message.chat.id)
 
 
 if __name__ == "__main__":
