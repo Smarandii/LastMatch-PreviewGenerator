@@ -14,7 +14,7 @@ class PreviewGenerator:
         self.images = []
 
     def get_size(self, length: int) -> tuple[int, int]:
-        return int((self.base_img_width + self.X_MARGIN * 2) * length), \
+        return int((self.base_img_width + self.X_MARGIN) * length + self.X_MARGIN), \
                int(self.base_img_height + self.Y_MARGIN * 2)
 
     def find_images(self, folder_path: str):

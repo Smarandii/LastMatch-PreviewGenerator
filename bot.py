@@ -5,6 +5,7 @@ import preview_gen
 
 token = "1852831543:AAFDNO9fMNk6qR6G_U0ejDW7Ba7ZjvJtwEs"
 bot = telebot.TeleBot(token)
+ADMIN_ID = 231584958
 
 
 def clear_all(path):
@@ -18,12 +19,16 @@ def clear_all(path):
 @bot.message_handler(commands=["start"])
 def start_command(message):
     bot.send_message(message.chat.id, "Send me some previews in an album!")
-    os.mkdir(f"{message.chat.id}")
+    print(message.chat.id)
 
 
 @bot.message_handler(content_types=["photo"])
 def get_photos(message):
     counter = 1
+    try:
+        os.mkdir(f"{message.chat.id}")
+    except FileExistsError:
+        pass
     try:
         for photo_index in range(0, len(message.photo)):
             bot.send_chat_action(message.chat.id, 'typing')
@@ -37,11 +42,17 @@ def get_photos(message):
             counter += 1
         bot.send_message(message.chat.id, "Preview downloaded and ready! Type /generate command to proceed.")
     except Exception as ex:
-        bot.send_message(message.chat.id, f"[!] error - {str(ex)}")
+        bot.send_message(message.chat.id, f"Something bad just happened. Try /reset command!")
+        bot.send_message(ADMIN_ID, f"[!] error - {str(ex)}")
+        print(f"[!] error - {str(ex)}")
 
 
 @bot.message_handler(content_types=["document"])
 def get_document(message):
+    try:
+        os.mkdir(f"{message.chat.id}")
+    except FileExistsError:
+        pass
     try:
         bot.send_chat_action(message.chat.id, 'typing')
         file_id_info = bot.get_file(message.document.file_id)
@@ -52,7 +63,9 @@ def get_document(message):
             new_file.write(downloaded_file)
         bot.send_message(message.chat.id, "Preview downloaded and ready! Type /generate command to proceed.")
     except Exception as ex:
-        bot.send_message(message.chat.id, f"[!] error - {str(ex)}")
+        bot.send_message(message.chat.id, f"Something bad just happened. Try /reset command!")
+        bot.send_message(ADMIN_ID, f"[!] error - {str(ex)}")
+        print(f"[!] error - {str(ex)}")
 
 
 @bot.message_handler(commands=["generate"])
@@ -60,7 +73,7 @@ def generate_command(message):
     gen = preview_gen.PreviewGenerator()
     gen.run(f"{message.chat.id}")
     bot.send_chat_action(message.chat.id, 'typing')
-    try:    
+    try:
         bot.send_document(message.chat.id, open(os.path.join(f"{message.chat.id}", "preview.png"), 'rb'))
         clear_all(f"{message.chat.id}")
     except Exception as e:
@@ -78,4 +91,4 @@ if __name__ == "__main__":
         while True:
             bot.polling()
     except Exception as e:
-        print(e.args)
+        bot.send_message(ADMIN_ID, f"[!] error - {str(e)}")
