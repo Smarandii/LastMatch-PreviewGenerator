@@ -12,6 +12,7 @@ class PreviewGenerator:
         self.base_img_width = base_img_width
         self.base_img_height = base_img_height
         self.images = []
+        self.mode = "CMYK"
 
     def get_size(self, length: int) -> tuple[int, int]:
         return int((self.base_img_width + self.X_MARGIN) * length + self.X_MARGIN), \
@@ -28,9 +29,10 @@ class PreviewGenerator:
 
     def get_images(self):
         for name in self.img_names:
-            print(name)
             img = Image.open(name)
             self.images.append(img)
+            print(name, img.mode)
+            self.mode = img.mode
             if self.base_img_width is None:
                 self.base_img_width = img.width
                 self.base_img_height = img.height
@@ -49,7 +51,10 @@ class PreviewGenerator:
             self.get_images()
 
             preview_size = self.get_size(len(self.images))
-            preview = Image.new("RGBA", size=preview_size)
+
+            if self.mode == "RGB":
+                self.mode = "RGBA"
+            preview = Image.new(self.mode, size=preview_size)
 
             x = self.X_MARGIN
             y = self.Y_MARGIN

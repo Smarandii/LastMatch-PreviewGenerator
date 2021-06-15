@@ -32,7 +32,7 @@ def get_photos(message):
     try:
         for photo_index in range(0, len(message.photo)):
             bot.send_chat_action(message.chat.id, 'typing')
-            if counter % 4 == 0:
+            if message.photo[-1] == message.photo[photo_index]:
                 file_id_info = bot.get_file(message.photo[photo_index].file_id)
                 downloaded_file = bot.download_file(file_id_info.file_path)
                 print(file_id_info.file_path)
@@ -79,7 +79,8 @@ def generate_command(message):
         bot.send_document(message.chat.id, open(os.path.join(f"{message.chat.id}", "preview.png"), 'rb'))
         clear_all(f"{message.chat.id}")
     except Exception as e:
-        print(e.args)
+        bot.send_message(ADMIN_ID, f"[!] error - {str(e)}")
+        print(f"[!] error - {str(e)}")
         bot.send_message(message.chat.id, "Failed to generate preview...")
 
 
