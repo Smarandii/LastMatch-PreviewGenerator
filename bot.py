@@ -18,7 +18,7 @@ def clear_all(path):
 
 @bot.message_handler(commands=["start"])
 def start_command(message):
-    bot.send_message(message.chat.id, "Send me some previews in an album!")
+    bot.send_message(message.chat.id, "Send me some images!")
     print(message.chat.id)
 
 
@@ -40,7 +40,8 @@ def get_photos(message):
                     bot.send_chat_action(message.chat.id, 'typing')
                     new_file.write(downloaded_file)
             counter += 1
-        bot.send_message(message.chat.id, "Preview downloaded and ready! Type /generate command to proceed.")
+        # bot.send_message(message.chat.id, "Preview downloaded and ready! Type /generate command to proceed.")
+        bot.reply_to(message, "Preview downloaded and ready! Type /generate command to proceed.")
     except Exception as ex:
         bot.send_message(message.chat.id, f"Something bad just happened. Try /reset command!")
         bot.send_message(ADMIN_ID, f"[!] error - {str(ex)}")
@@ -61,7 +62,8 @@ def get_document(message):
         with open(os.path.join(f"{message.chat.id}", f'{message.document.file_id}.png'), 'wb') as new_file:
             bot.send_chat_action(message.chat.id, 'typing')
             new_file.write(downloaded_file)
-        bot.send_message(message.chat.id, "Preview downloaded and ready! Type /generate command to proceed.")
+        # bot.send_message(message.chat.id, "Preview downloaded and ready! Type /generate command to proceed.")
+        bot.reply_to(message.chat.id, "Preview downloaded and ready! Type /generate command to proceed.")
     except Exception as ex:
         bot.send_message(message.chat.id, f"Something bad just happened. Try /reset command!")
         bot.send_message(ADMIN_ID, f"[!] error - {str(ex)}")
