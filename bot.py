@@ -37,9 +37,11 @@ def authorize(t_id):
 @bot.message_handler(commands=["login"])
 def start_command(message):
     try:
-        if message.text.split(" ")[1] == PASSWORD:
+        if message.text.split(" ")[1] == PASSWORD and not is_authorized(message.chat.id):
             authorize(message.chat.id)
             bot.send_message(message.chat.id, "Successfully authorized!")
+        else:
+            bot.reply_to(message, "Wrong password!")
     except Exception:
         bot.send_message(message.chat.id, "Authorization failed!")
 
