@@ -77,8 +77,8 @@ def get_photos(message):
             bot.reply_to(message, "Preview downloaded and ready! Type /generate command to proceed.")
         except Exception as ex:
             bot.send_message(message.chat.id, f"Something bad just happened. Try /reset command!")
-            bot.send_message(ADMIN_ID, f"[!] error - {str(ex)}")
-            print(f"[!] error - {str(ex)}")
+            bot.send_message(ADMIN_ID, f"[!] photo download error - {str(ex)}")
+            print(f"[!] photo generation error error - {str(ex)}")
     else:
         bot.send_message(message.chat.id, "Authorization needed to proceed! Use /login [password] to authorize.")
 
@@ -101,8 +101,8 @@ def get_document(message):
             bot.reply_to(message.chat.id, "Preview downloaded and ready! Type /generate command to proceed.")
         except Exception as ex:
             bot.send_message(message.chat.id, f"Something bad just happened. Try /reset command!")
-            bot.send_message(ADMIN_ID, f"[!] error - {str(ex)}")
-            print(f"[!] error - {str(ex)}")
+            bot.send_message(ADMIN_ID, f"[!] document download error - {str(ex)}")
+            print(f"[!] document generation error - {str(ex)}")
     else:
         bot.send_message(message.chat.id, "Authorization needed to proceed! Use /login [password] to authorize.")
 
@@ -117,7 +117,7 @@ def generate_command(message):
             bot.send_document(message.chat.id, open(os.path.join(f"{message.chat.id}", "preview.png"), 'rb'))
             clear_all(f"{message.chat.id}")
         except Exception as e:
-            bot.send_message(ADMIN_ID, f"[!] error - {str(e)}")
+            bot.send_message(ADMIN_ID, f"[!] Failed to generate preview error - {str(e)}")
             print(f"[!] error - {str(e)}")
             bot.send_message(message.chat.id, "Failed to generate preview...")
     else:
