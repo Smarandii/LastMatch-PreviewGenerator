@@ -40,6 +40,8 @@ def start_command(message):
         if message.text.split(" ")[1] == PASSWORD and not is_authorized(message.chat.id):
             authorize(message.chat.id)
             bot.send_message(message.chat.id, "Successfully authorized!")
+        if is_authorized(message.chat.id):
+            bot.reply_to(message, "Already authorized!")
         else:
             bot.reply_to(message, "Wrong password!")
     except Exception:
@@ -64,6 +66,7 @@ def get_photos(message):
         except FileExistsError:
             pass
         try:
+            print(len(message.photo))
             for photo_index in range(0, len(message.photo)):
                 bot.send_chat_action(message.chat.id, 'typing')
                 if message.photo[-1] == message.photo[photo_index]:
@@ -73,6 +76,9 @@ def get_photos(message):
                     with open(os.path.join(f"{message.chat.id}", f'{message.photo[photo_index].file_id}.png'), 'wb') as new_file:
                         bot.send_chat_action(message.chat.id, 'typing')
                         new_file.write(downloaded_file)
+                    tmp_img = preview_gen.Image.open(
+                        os.path.join(f"{message.chat.id}", f'{message.photo[photo_index].file_id}.png'))
+                    print(tmp_img.width, tmp_img.height)
                 counter += 1
             bot.reply_to(message, "Preview downloaded and ready! Type /generate command to proceed.")
         except Exception as ex:
@@ -98,11 +104,11 @@ def get_document(message):
             with open(os.path.join(f"{message.chat.id}", f'{message.document.file_id}.png'), 'wb') as new_file:
                 bot.send_chat_action(message.chat.id, 'typing')
                 new_file.write(downloaded_file)
-            bot.reply_to(message.chat.id, "Preview downloaded and ready! Type /generate command to proceed.")
+            bot.reply_to(message, "Preview downloaded and ready! Type /generate command to proceed.")
         except Exception as ex:
             bot.send_message(message.chat.id, f"Something bad just happened. Try /reset command!")
-            bot.send_message(ADMIN_ID, f"[!] document download error - {str(ex)}")
-            print(f"[!] document generation error - {str(ex)}")
+            bot.send_message(ADMIN_ID, f"[!] document download error - {ex}")
+            print(f"[!] document generation error - {ex}")
     else:
         bot.send_message(message.chat.id, "Authorization needed to proceed! Use /login [password] to authorize.")
 
@@ -136,8 +142,8 @@ def reset(message):
 
 
 if __name__ == "__main__":
-    try:
-        while True:
+    while True:
+        try:
             bot.polling()
-    except Exception as e:
-        bot.send_message(ADMIN_ID, f"[!] error - {str(e)}")
+        except Exception as e:
+            bot.send_message(ADMIN_ID, f"[!] error - {str(e)}")
