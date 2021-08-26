@@ -144,6 +144,6 @@ def reset(message):
 if __name__ == "__main__":
     while True:
         try:
-            bot.polling()
+            bot.polling(none_stop=True)
         except Exception as e:
             bot.send_message(ADMIN_ID, f"[!] error - {str(e)}")
